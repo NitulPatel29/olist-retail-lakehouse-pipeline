@@ -2,7 +2,7 @@
 
 # Olist Retail Lakehouse Pipeline
 
-End-to-end batch ETL pipeline using PySpark, Databricks, Snowflake & Power BI — Medallion architecture on Olist e-commerce data.
+End-to-end batch ETL pipeline using PySpark, Databricks, Snowflake & Power BI - Medallion architecture on Olist e-commerce data.
 
 ## Overview
 
