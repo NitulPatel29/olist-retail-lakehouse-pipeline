@@ -1,0 +1,41 @@
+-- Sets up RETAIL_DB.GOLD schema with revenue and category tables
+-- Co-authored with CoCo
+CREATE WAREHOUSE IF NOT EXISTS COMPUTE_WH 
+  WITH WAREHOUSE_SIZE = 'XSMALL' 
+  AUTO_SUSPEND = 60 
+  AUTO_RESUME = TRUE;
+
+CREATE DATABASE IF NOT EXISTS RETAIL_DB;
+
+CREATE SCHEMA IF NOT EXISTS RETAIL_DB.GOLD;
+
+USE DATABASE RETAIL_DB;
+USE SCHEMA GOLD;
+
+CREATE TABLE IF NOT EXISTS DAILY_REVENUE (
+    order_purchase_date DATE,
+    total_revenue FLOAT,
+    total_orders INT
+);
+
+CREATE TABLE IF NOT EXISTS REVENUE_BY_STATE (
+    customer_state STRING,
+    total_revenue FLOAT,
+    total_orders INT
+);
+
+CREATE TABLE IF NOT EXISTS TOP_CATEGORIES (
+    product_category_name STRING,
+    total_revenue FLOAT,
+    total_items_sold INT
+);
+
+SHOW TABLES IN RETAIL_DB.GOLD;
+
+
+USE DATABASE RETAIL_DB;
+USE SCHEMA GOLD;
+
+SELECT * FROM DAILY_REVENUE ORDER BY order_purchase_date LIMIT 10;
+SELECT * FROM REVENUE_BY_STATE ORDER BY total_revenue DESC LIMIT 10;
+SELECT * FROM TOP_CATEGORIES ORDER BY total_revenue DESC LIMIT 10;
