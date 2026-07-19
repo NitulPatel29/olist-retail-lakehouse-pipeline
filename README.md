@@ -1,4 +1,6 @@
-# olist-retail-lakehouse-pipeline
+![Dashboard Preview](dashboard.png)
+
+# Olist Retail Lakehouse Pipeline
 
 End-to-end batch ETL pipeline using PySpark, Databricks, Snowflake & Power BI — Medallion architecture on Olist e-commerce data.
 
@@ -37,32 +39,32 @@ This project uses the [Brazilian E-Commerce Public Dataset by Olist](https://www
 **To reproduce this project:**
 1. Download the dataset from the link above
 2. Upload the CSVs to your own Databricks Volume (or cloud storage of choice)
-3. Update the file paths in `notebooks/01_bronze_ingestion.py` to match your storage location
+3. Update the file paths in `01_bronze_ingestion.ipynb` to match your storage location
 
 ## Pipeline Stages
 
-### 1. Bronze — Raw Ingestion (`01_bronze_ingestion.py`)
+### 1. Bronze — Raw Ingestion (`01_bronze_ingestion.ipynb`)
 Reads all 9 raw CSV files and writes them as Delta tables, preserving the original data as-is. This creates a reliable, query-optimized copy of the raw data that the rest of the pipeline builds on.
 
-### 2. Silver — Cleaning & Standardization (`02_silver_transformation.py`)
+### 2. Silver — Cleaning & Standardization (`02_silver_transformation.ipynb`)
 Cleans the core tables (`orders`, `order_items`, `customers`, `products`, `order_payments`):
 - Removes duplicate records
 - Standardizes text fields (trimmed, lowercased)
 - Filters out invalid rows (nulls, negative prices)
 - Extracts clean date columns from timestamps
 
-### 3. Gold — Business Aggregates (`03_gold_aggregation.py`)
+### 3. Gold — Business Aggregates (`03_Gold_final.ipynb`)
 Builds three business-ready tables:
 - **`daily_revenue`** — total revenue and order count per day
 - **`revenue_by_state`** — total revenue and orders by customer state
 - **`top_categories`** — total revenue and items sold by product category
 
-### 4. Load to Snowflake (`04_load_to_snowflake.py`)
+### 4. Load to Snowflake (`04_load_to_snowflake.ipynb`)
 Pushes the three Gold tables from Databricks into Snowflake using the Snowflake Spark connector, making them available for fast, concurrent BI queries.
 
 ## Data Warehouse Schema (Snowflake)
 
-Setup SQL is in `snowflake/ddl_setup.sql`. Creates a dedicated warehouse, database, and schema (`RETAIL_DB.GOLD`) with three tables matching the Gold layer output.
+Setup SQL is in `ddl_setup.sql`. Creates a dedicated warehouse, database, and schema (`RETAIL_DB.GOLD`) with three tables matching the Gold layer output.
 
 ## Dashboard
 
@@ -73,7 +75,7 @@ Built in Power BI, connected directly to Snowflake:
 - **Revenue by State** — bar chart showing top-performing states
 - **Top Product Categories** — bar chart showing highest-revenue categories
 
-See `dashboard/dashboard_screenshot.png` for a preview, or open `dashboard/retail_dashboard.pbix` in Power BI Desktop (Snowflake credentials required to refresh live data; cached visuals will still display without them).
+See `dashboard.png` above for a preview, or open `Sales Dashboard.pbix` in Power BI Desktop (Snowflake credentials required to refresh live data; cached visuals will still display without them).
 
 ## Key Design Decisions
 
@@ -96,15 +98,12 @@ Working through this project surfaced a few real-world data engineering hurdles:
 
 ```
 olist-retail-lakehouse-pipeline/
-├── notebooks/
-│   ├── 01_bronze_ingestion.py
-│   ├── 02_silver_transformation.py
-│   ├── 03_gold_aggregation.py
-│   └── 04_load_to_snowflake.py
-├── snowflake/
-│   └── ddl_setup.sql
-├── dashboard/
-│   ├── dashboard_screenshot.png
-│   └── retail_dashboard.pbix
+├── 01_bronze_ingestion.ipynb
+├── 02_silver_transformation.ipynb
+├── 03_Gold_final.ipynb
+├── 04_load_to_snowflake.ipynb
+├── ddl_setup.sql
+├── dashboard.png
+├── Sales Dashboard.pbix
 └── README.md
 ```
